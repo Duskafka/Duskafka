@@ -31,8 +31,11 @@
 
 ### 기술 스택
 
-| Backend | Data | Infra | Test |
-| :---: | :---: | :---: | :---: |
-| Java 17 · Spring Boot 3.5<br>WebClient · JPA · Querydsl | MySQL 8 · Redis<br>Flyway | ECS Fargate · SQS<br>SageMaker · AWS CDK | JUnit 5 · Testcontainers<br>JMeter |
+| 분야 | 기술 |
+| :---: | :---: |
+| **Backend** | ![Java 17](https://img.shields.io/badge/Java%2017-ED8B00?style=flat-square&logo=openjdk&logoColor=white) ![Spring Boot 3.5](https://img.shields.io/badge/Spring%20Boot%203.5-6DB33F?style=flat-square&logo=springboot&logoColor=white) ![Spring MVC](https://img.shields.io/badge/Spring%20MVC-6DB33F?style=flat-square&logo=spring&logoColor=white) ![WebClient](https://img.shields.io/badge/WebClient-6DB33F?style=flat-square&logo=spring&logoColor=white) ![Spring Security](https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat-square&logo=springsecurity&logoColor=white) ![JPA](https://img.shields.io/badge/JPA-59666C?style=flat-square&logo=hibernate&logoColor=white) ![Querydsl](https://img.shields.io/badge/Querydsl-0769AD?style=flat-square) |
+| **Data** | ![MySQL 8](https://img.shields.io/badge/MySQL%208-4479A1?style=flat-square&logo=mysql&logoColor=white) ![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white) ![Flyway](https://img.shields.io/badge/Flyway-CC0200?style=flat-square&logo=flyway&logoColor=white) |
+| **Infra** | ![ECS Fargate](https://img.shields.io/badge/ECS%20Fargate-FF9900?style=flat-square) ![RDS](https://img.shields.io/badge/RDS-527FFF?style=flat-square) ![S3](https://img.shields.io/badge/S3-569A31?style=flat-square) ![SQS](https://img.shields.io/badge/SQS-FF4F8B?style=flat-square) ![SageMaker](https://img.shields.io/badge/SageMaker-01A88D?style=flat-square) ![AWS CDK](https://img.shields.io/badge/AWS%20CDK-232F3E?style=flat-square) ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white) |
+| **Test** | ![JUnit 5](https://img.shields.io/badge/JUnit%205-25A162?style=flat-square&logo=junit5&logoColor=white) ![Mockito](https://img.shields.io/badge/Mockito-78A641?style=flat-square) ![Testcontainers](https://img.shields.io/badge/Testcontainers-17A2B8?style=flat-square) ![JMeter](https://img.shields.io/badge/JMeter-D22128?style=flat-square&logo=apachejmeter&logoColor=white) |
 
 </div>
