@@ -1,65 +1,41 @@
-<div align="center" style="background: #9DB2BF">
+<div align="center">
+
+![김기현 · Backend Developer](https://capsule-render.vercel.app/api?type=rect&color=2C4A6E&height=120&text=%EA%B9%80%EA%B8%B0%ED%98%84&fontColor=F6F7F9&fontSize=46&fontAlignY=40&desc=Backend%20Developer&descSize=16&descAlignY=72)
+
+### 외부 연동 구간의 동시성·장애 문제를 다루는 백엔드 개발자
+
+재현 테스트로 원인을 확인하고, 부하 측정으로 개선을 증명합니다.
+
+<a href="https://velog.io/@duskafka"><img src="https://img.shields.io/badge/velog-@duskafka-20C997?style=flat-square&logo=velog&logoColor=white" alt="velog"></a>
+<a href="mailto:rlarlgus0206@naver.com"><img src="https://img.shields.io/badge/Email-rlarlgus0206@naver.com-2C4A6E?style=flat-square&logo=naver&logoColor=white" alt="Email"></a>
+
+<br><br>
+
+### 실측으로 확인한 결과
+
+| [**99%**](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/benchmark/01-thread-occupancy.md) | [**2.5×**](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/benchmark/01b-thread-occupancy-scale.md) | [**100%**](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/benchmark/02-sqs-idempotency-consistency.md) | [**394×**](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/troubleshooting/13-running-art-query-indexes.md) |
+| :---: | :---: | :---: | :---: |
+| 톰캣 워커 점유 감소<br><sub>p95 101 → 1</sub> | 처리량 증가<br><sub>398.6 → 993.7 TPS</sub> | SQS 중복 콜백 정합성<br><sub>Testcontainers 3회 반복</sub> | 목록 조회 단축<br><sub>21 → 0.053ms</sub> |
 
 <br>
 
-![header](https://capsule-render.vercel.app/api?type=cylinder&color=27374D&height=150&section=header&text=KimKiHyun&fontColor=DDE6ED&fontSize=70&animation=fadeIn&fontAlignY=55)
+### 프로젝트
 
-<br>
-<br>
-
-![GitHub Snake](https://raw.githubusercontent.com/KimKiHyun0206/KimKiHyun0206/output/github-snake.svg)
-
-<br>
-<br>
-
-<div style="display: flex; flex-direction: row; width: 100%;">
-
-<div style="width: 50%; background: #526D82; padding: 20px; text-align: left;">
-
-<a href="https://velog.io/@duskafka/posts">
-  <img src="https://img.shields.io/badge/Blog-black?style=for-the-badge&logo=velog&logoColor=white">
-</a>
-
-<details>
-  <summary style="cursor: pointer; color: #DDE6ED;">
-    <h3 style="display: inline;">✅ Latest Blog Posts</h3>
-  </summary>
-  <div align="left" style="margin-top: 10px;">
-    <ol style="color: #DDE6ED; padding-left: 40px;">
-
-<!-- BLOG-POST-LIST:START --><li><a href='https://velog.io/@duskafka/%EB%82%98%EC%9D%98-%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81-%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8' style='color: #DDE6ED; text-decoration: none;'>📖 나의 리팩토링 인사이트</a> <span style='color: #DDE6ED;'>(2026-08-28)</span></li><li><a href='https://velog.io/@duskafka/%EB%8F%99%EC%8B%9C%EC%84%B1%EA%B3%BC-%EB%B3%91%EB%A0%AC%EC%84%B1' style='color: #DDE6ED; text-decoration: none;'>📖 동시성과 병렬성</a> <span style='color: #DDE6ED;'>(2026-07-17)</span></li><li><a href='https://velog.io/@duskafka/%EC%9E%90%EB%B0%94-21%EC%9D%98-%EA%B0%80%EC%83%81-%EC%8A%A4%EB%A0%88%EB%93%9C%EB%A5%BC-%EC%95%8C%EC%95%84%EC%95%BC-%ED%95%98%EB%8A%94-%EC%9D%B4%EC%9C%A0' style='color: #DDE6ED; text-decoration: none;'>📖 자바 21의 가상 스레드를 알아야 하는 이유</a> <span style='color: #DDE6ED;'>(2026-07-10)</span></li><li><a href='https://velog.io/@duskafka/%EA%B0%80%EC%83%81-%EC%8A%A4%EB%A0%88%EB%93%9C-%EC%A0%9C%EC%96%B4%EC%9D%98-%ED%95%B5%EC%8B%AC-Semaphore' style='color: #DDE6ED; text-decoration: none;'>📖 가상 스레드 제어의 핵심: Semaphore</a> <span style='color: #DDE6ED;'>(2026-07-08)</span></li><li><a href='https://velog.io/@duskafka/HikariCP-%ED%92%80%EC%9D%98-%ED%81%AC%EA%B8%B0%EB%A5%BC-%EB%AC%B4%EC%A1%B0%EA%B1%B4-%EB%8A%98%EB%A6%AC%EB%A9%B4-%EC%95%88-%EB%90%98%EB%8A%94-%EC%9D%B4%EC%9C%A0%EC%99%80-%EC%A0%81%EC%A0%88%ED%95%9C-%ED%8A%9C%EB%8B%9D-%EA%B3%B5%EC%8B%9D' style='color: #DDE6ED; text-decoration: none;'>📖 HikariCP: 풀의 크기를 무조건 늘리면 안 되는 이유와 적절한 튜닝 공식</a> <span style='color: #DDE6ED;'>(2026-07-08)</span></li><li><a href='https://velog.io/@duskafka/HikariCP%EC%99%80-DB-%EC%BB%A4%EB%84%A5%EC%85%98-%ED%92%80-%EC%99%9C-%EC%82%AC%EC%9A%A9%ED%95%A0%EA%B9%8C' style='color: #DDE6ED; text-decoration: none;'>📖 HikariCP와 DB 커넥션 풀: 왜 사용할까?</a> <span style='color: #DDE6ED;'>(2026-07-08)</span></li><li><a href='https://velog.io/@duskafka/%EA%B5%AC%EC%A1%B0%EC%A0%81-%EB%8F%99%EC%8B%9C%EC%84%B1Structed-Concurrency' style='color: #DDE6ED; text-decoration: none;'>📖 구조적 동시성&lpar;Structed Concurrency&rpar;</a> <span style='color: #DDE6ED;'>(2026-07-08)</span></li><li><a href='https://velog.io/@duskafka/ScopedValue-%EA%B0%80%EC%83%81-%EC%8A%A4%EB%A0%88%EB%93%9C%EC%97%90%EC%84%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EB%B3%B4%EA%B4%80%ED%95%A8' style='color: #DDE6ED; text-decoration: none;'>📖 ScopedValue: 가상 스레드에서 사용하는 보관함</a> <span style='color: #DDE6ED;'>(2026-07-07)</span></li><li><a href='https://velog.io/@duskafka/Filter%EC%99%80-Interceptor%EC%97%90%EC%84%9C-ThreadLocal%EC%9D%84-%EB%8B%A4%EB%A3%A8%EB%8A%94-%EB%B0%A9%EB%B2%95' style='color: #DDE6ED; text-decoration: none;'>📖 Filter와 Interceptor에서 ThreadLocal을 다루는 방법</a> <span style='color: #DDE6ED;'>(2026-07-07)</span></li><li><a href='https://velog.io/@duskafka/%EC%8A%A4%EB%A0%88%EB%93%9C%EC%97%90-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%A5%BC-%EC%A0%80%EC%9E%A5%ED%95%98%EB%8A%94-ThreadLocal' style='color: #DDE6ED; text-decoration: none;'>📖 스레드에 데이터를 저장하는 ThreadLocal</a> <span style='color: #DDE6ED;'>(2026-07-05)</span></li><!-- BLOG-POST-LIST:END -->
-
-</ol>
-</div>
-</details>
-
+| 프로젝트 | 내용 | 기술 |
+| :---: | :---: | :---: |
+| [**Aetheria**](https://github.com/Aetheria-Tech/Aetheria-Service)<br><sub>팀 3명 · 2025.06–2026.07</sub> | AI 러닝 아트 생성 서비스 · 학술대회 금상<br>외부 연동 구간의 동시성·장애 문제 해결 | WebClient · Redis<br>SQS · SageMaker |
+| [**Coding Mate**](https://github.com/Duskafka/Coding-Mate)<br><sub>개인 · 2025.04–2025.07</sub> | 백준 풀이 기록·공유 서비스<br>기획부터 배포 자동화까지 단독 개발 | Spring Batch · Redis<br>Docker · GitHub Actions |
+| [**CodeForCode**](https://github.com/Duskafka/code-for-code)<br><sub>팀 3명 · 2024.09–2024.11</sub> | AI가 출제하는 코딩테스트 학습 서비스<br>인증·게시판 API와 Gemini 연동 | Spring Security · JWT<br>MySQL · Gemini API |
 
 <br>
 
-<h2 style="color: #DDE6ED">📚 Tech Stack 📚</h2>
-<p>
-  <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Spring%20WebFlux-6DB33F?style=for-the-badge&logo=spring&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white"/>
-  <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
-</p>
+### 기술 스택
 
-</div>
-
-<div style="width: 50%; background: #DDE6ED; padding: 20px; text-align: left;">
-
-<h2 style="color: #526D82"> 📝 Experienced 📝 </h2>
-<p>
-  <img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=for-the-badge&logo=spring-security&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Spring%20OAuth2-6DB33F?style=for-the-badge&logo=spring&logoColor=white"/>
-  <img src="https://img.shields.io/badge/R2DBC-007396?style=for-the-badge&logo=spring&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Querydsl-007396?style=for-the-badge&logo=java&logoColor=white"/>
-  <img src="https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white"/>
-  <img src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white"/>
-</p>
-
-</div>
-
-</div>
+| 분야 | 기술 |
+| :---: | :---: |
+| **Backend** | ![Java 17](https://img.shields.io/badge/Java%2017-ED8B00?style=flat-square&logo=openjdk&logoColor=white) ![Spring Boot 3.5](https://img.shields.io/badge/Spring%20Boot%203.5-6DB33F?style=flat-square&logo=springboot&logoColor=white) ![Spring MVC](https://img.shields.io/badge/Spring%20MVC-6DB33F?style=flat-square&logo=spring&logoColor=white) ![WebClient](https://img.shields.io/badge/WebClient-6DB33F?style=flat-square&logo=spring&logoColor=white) ![Spring Security](https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat-square&logo=springsecurity&logoColor=white) ![JPA](https://img.shields.io/badge/JPA-59666C?style=flat-square&logo=hibernate&logoColor=white) ![Querydsl](https://img.shields.io/badge/Querydsl-0769AD?style=flat-square) |
+| **Data** | ![MySQL 8](https://img.shields.io/badge/MySQL%208-4479A1?style=flat-square&logo=mysql&logoColor=white) ![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white) ![Flyway](https://img.shields.io/badge/Flyway-CC0200?style=flat-square&logo=flyway&logoColor=white) |
+| **Infra** | ![ECS Fargate](https://img.shields.io/badge/ECS%20Fargate-FF9900?style=flat-square) ![RDS](https://img.shields.io/badge/RDS-527FFF?style=flat-square) ![S3](https://img.shields.io/badge/S3-569A31?style=flat-square) ![SQS](https://img.shields.io/badge/SQS-FF4F8B?style=flat-square) ![SageMaker](https://img.shields.io/badge/SageMaker-01A88D?style=flat-square) ![AWS CDK](https://img.shields.io/badge/AWS%20CDK-232F3E?style=flat-square) ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white) |
+| **Test** | ![JUnit 5](https://img.shields.io/badge/JUnit%205-25A162?style=flat-square&logo=junit5&logoColor=white) ![Mockito](https://img.shields.io/badge/Mockito-78A641?style=flat-square) ![Testcontainers](https://img.shields.io/badge/Testcontainers-17A2B8?style=flat-square) ![JMeter](https://img.shields.io/badge/JMeter-D22128?style=flat-square&logo=apachejmeter&logoColor=white) |
 
 </div>
