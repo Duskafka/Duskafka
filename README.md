@@ -35,24 +35,24 @@ AI 추론은 수 분이 걸리고, 실패할 수 있고, 호출마다 비용이 
 외부 연동이 WebClient 이벤트 루프 하나를 함께 쓰기 때문에, 대기 작업은 전용 스레드 풀로 옮겨 한 곳이 느려져도 로그인까지 멈추지 않게 했습니다.
 
 ```mermaid
-flowchart LR
+flowchart TB
     client(["클라이언트"])
-    accept["① 요청 접수<br/>taskId 즉시 반환"]
-    infer["② 추론 요청<br/>대기 작업은 전용 풀"]
-    callback["③ 완료 콜백 처리<br/>트랜잭션 · 락 · DLQ"]
-    notify["④ 실시간 알림<br/>SSE · Redis Pub/Sub"]
-    redis[("Redis<br/>요청 한도 · 진행 상태")]
-    sagemaker[["SageMaker<br/>비동기 추론 · 결과 S3"]]
-    sqs[["SQS<br/>완료 콜백 · 재전달"]]
+    accept["① 요청 접수 — taskId 즉시 반환"]
+    redis[("Redis — 요청 한도 · 진행 상태")]
+    infer["② 추론 요청 — 대기 작업은 전용 스레드 풀"]
+    sagemaker[["SageMaker — 비동기 추론 · 결과 S3"]]
+    sqs[["SQS — 완료 콜백 · 재전달"]]
+    callback["③ 완료 콜백 처리 — 트랜잭션 · 락 · DLQ"]
+    notify["④ 실시간 알림 — SSE · Redis Pub/Sub"]
 
     client --> accept
     accept -. 한도 확인 .-> redis
     accept --> infer
     infer -- 추론 호출 --> sagemaker
-    sagemaker -- 발행 --> sqs
+    sagemaker -- 완료 발행 --> sqs
     sqs -- 콜백 소비 --> callback
     callback --> notify
-    notify -- SSE 푸시 --> client
+    notify -. SSE 푸시 .-> client
 
     classDef external stroke-dasharray: 5 5
     class sagemaker,sqs external
@@ -60,14 +60,14 @@ flowchart LR
 
 ### 트러블슈팅
 
-| 분야 | 문제 | 해결 | 결과 | 기록 |
-| --- | --- | --- | --- | --- |
-| **동시성** | Redis·DB·S3 대기 작업이 외부 연동 이벤트 루프에 섞여, 하나가 느려지면 전부 멈출 수 있음 | 대기 작업을 `boundedElastic` 전용 풀로 이동 | 톰캣 워커 점유 **99%↓** | [문서](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/troubleshooting/01-reactive-blocking-io.md) · [코드](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/src/main/java/com/serverbe/application/service/AiGenerationService.java) |
-| **장애 대응** | 토큰 검증이 모두 Redis 블랙리스트를 거쳐, Redis가 죽으면 정상 토큰도 차단 | 연결 실패·타임아웃만 검증을 건너뛰는 Fail-Open + 감사 로그 | Redis 장애에도 로그인 유지<br><sub>위험은 토큰 15분 수명으로 제한</sub> | [문서](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/troubleshooting/06-refresh-token-rotation.md) · [코드](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/src/main/java/com/serverbe/adapter/out/persistence/token/TokenBlacklistAdapter.java) |
-| **정합성** | SQS가 같은 콜백을 중복·역순으로 전달 | 트랜잭션 + 락, 저장 전이면 예외로 재전달 유도, 계속 실패하면 DLQ | 정합성 **100%**<br><sub>Testcontainers 재현</sub> | [문서](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/troubleshooting/03-sqs-callback-race-condition.md) · [코드](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/src/main/java/com/serverbe/adapter/in/messaging/AiNotificationSqsListener.java) |
-| **비용 제어** | 버튼을 연달아 누르면 SageMaker 비용도 그대로 발생 | 확인·차감을 묶은 Lua 토큰 버킷 (10회, 초당 5회 회복) | 한도 초과 **0건** | [문서](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/troubleshooting/05-rate-limit-lua-token-bucket.md) · [테스트](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/src/test/java/com/serverbe/RateLimiterServiceConcurrencyTest.java) |
-| **세션 관리** | 여러 기기로 로그인하면 세션이 계속 쌓임 | 등록·초과 확인·축출을 Lua 하나로 묶어 최대 3대 | 동시 로그인에도 목록·토큰 일치 | [문서](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/troubleshooting/14-multi-device-session-lru.md) · [테스트](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/src/test/java/com/serverbe/adapter/out/persistence/token/RefreshTokenSessionAdapterTest.java) |
-| **DB 조회** | 20건을 보여 주려 35,380건을 정렬, 위치 적재는 풀스캔 | `EXPLAIN`으로 확인 후 복합·커버링 인덱스 2개 추가 | 목록 **21 → 0.053ms**<br>적재 **482 → 74.6ms**<br><sub>쓰기 +17% 감수</sub> | [문서](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/troubleshooting/13-running-art-query-indexes.md) · [마이그레이션](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/src/main/resources/db/migration/V6__add_running_art_query_indexes.sql) |
+| 문제 | 해결 | 결과 |
+| --- | --- | --- |
+| **동시성**<br>Redis·DB·S3 대기 작업이 외부 연동 이벤트 루프에 섞여, 하나가 느려지면 전부 멈출 수 있음<br><sub>[문서](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/troubleshooting/01-reactive-blocking-io.md) · [코드](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/src/main/java/com/serverbe/application/service/AiGenerationService.java)</sub> | 대기 작업을 `boundedElastic` 전용 풀로 이동 | 톰캣 워커 점유 **99%↓** |
+| **장애 대응**<br>토큰 검증이 모두 Redis 블랙리스트를 거쳐, Redis가 죽으면 정상 토큰도 차단<br><sub>[문서](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/troubleshooting/06-refresh-token-rotation.md) · [코드](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/src/main/java/com/serverbe/adapter/out/persistence/token/TokenBlacklistAdapter.java)</sub> | 연결 실패·타임아웃만 검증을 건너뛰는 Fail-Open + 감사 로그 | Redis 장애에도 로그인 유지<br><sub>위험은 토큰 15분 수명으로 제한</sub> |
+| **정합성**<br>SQS가 같은 콜백을 중복·역순으로 전달<br><sub>[문서](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/troubleshooting/03-sqs-callback-race-condition.md) · [코드](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/src/main/java/com/serverbe/adapter/in/messaging/AiNotificationSqsListener.java)</sub> | 트랜잭션 + 락, 저장 전이면 예외로 재전달 유도, 계속 실패하면 DLQ | 정합성 **100%**<br><sub>Testcontainers 재현</sub> |
+| **비용 제어**<br>버튼을 연달아 누르면 SageMaker 비용도 그대로 발생<br><sub>[문서](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/troubleshooting/05-rate-limit-lua-token-bucket.md) · [테스트](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/src/test/java/com/serverbe/RateLimiterServiceConcurrencyTest.java)</sub> | 확인·차감을 묶은 Lua 토큰 버킷 (10회, 초당 5회 회복) | 한도 초과 **0건** |
+| **세션 관리**<br>여러 기기로 로그인하면 세션이 계속 쌓임<br><sub>[문서](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/troubleshooting/14-multi-device-session-lru.md) · [테스트](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/src/test/java/com/serverbe/adapter/out/persistence/token/RefreshTokenSessionAdapterTest.java)</sub> | 등록·초과 확인·축출을 Lua 하나로 묶어 최대 3대 | 동시 로그인에도 목록·토큰 일치 |
+| **DB 조회**<br>20건을 보여 주려 35,380건을 정렬, 위치 적재는 풀스캔<br><sub>[문서](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/docs/troubleshooting/13-running-art-query-indexes.md) · [마이그레이션](https://github.com/Aetheria-Tech/Aetheria-Service/blob/master/src/main/resources/db/migration/V6__add_running_art_query_indexes.sql)</sub> | `EXPLAIN`으로 확인 후 복합·커버링 인덱스 2개 추가 | 목록 **21 → 0.053ms**<br>적재 **482 → 74.6ms**<br><sub>쓰기 +17% 감수</sub> |
 
 <details>
 <summary><b>기술 선택과 감수한 점</b></summary>
